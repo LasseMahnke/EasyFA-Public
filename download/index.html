@@ -1,51 +1,131 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Easy FA – Download</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyFA</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-            margin: 2rem;
-        }
-
-        .wrap {
-            max-width: 720px;
-            margin: 0 auto;
-        }
-
-        .badges {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
             display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin: 1.25rem 0;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        .badge img {
-            height: 56px;
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 500px;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 48px;
+            line-height: 1.5;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 14px 28px;
+            border: 1.5px solid #1a1a1a;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .download-btn:hover {
+            background-color: #ffffff;
+            color: #1a1a1a;
+        }
+
+        footer {
+            padding: 32px 20px;
+            text-align: center;
+            border-top: 1px solid #eaeaea;
+        }
+
+        footer a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+
+        footer a:hover {
+            color: #1a1a1a;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 36px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+                margin-bottom: 36px;
+            }
+
+            .download-btn {
+                padding: 12px 24px;
+                font-size: 15px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <main class="wrap">
-        <h1>Easy FA – Download</h1>
-        <p>Hol dir die App hier:</p>
-        <div class="badges">
-            <a class="badge" href="https://apps.apple.com/app/idYOUR_APPLE_ID" rel="noopener">
-                <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/de-de"
-                    alt="Laden im App Store">
-            </a>
-            <a class="badge" href="https://play.google.com/store/apps/details?id=your.android.package" rel="noopener">
-                <img src="https://play.google.com/intl/en_us/badges/static/images/badges/de_badge_web_generic.png"
-                    alt="Jetzt bei Google Play">
-            </a>
+    <main>
+        <div class="container">
+            <h1>EasyFA</h1>
+            <p class="subtitle">Your app for Financial Accounting</p>
+
+            <div class="button-group">
+                <a href="https://apps.apple.com/de/app/easy-fa/id6752997612" class="download-btn">Download for iOS</a>
+                <a href="https://github.com/LasseMahnke/EasyFA-Public/releases/download/1.2.3/easyfa.apk"
+                    class="download-btn">Download for Android</a>
+            </div>
         </div>
-        <p><a href="/">Startseite</a> · <a href="/impressum">Impressum</a> · <a
-                href="/datenschutz">Datenschutzerklärung</a></p>
     </main>
+
+    <footer>
+        <a href="https://easyfa.de">Datenschutz & Impressum</a>
+    </footer>
 </body>
 
 </html>
