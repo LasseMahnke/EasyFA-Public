@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Study Grove — A beautiful Pomodoro timer that tracks every minute of your study sessions, including overtime.">
+    <title>Study Grove — Focus Timer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header id="app-header">
+        <div class="header-left">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 22V8"/>
+                    <path d="M9 12c-3-1-5-4-5-7 3 0 6 2 7 5"/>
+                    <path d="M15 12c3-1 5-4 5-7-3 0-6 2-7 5"/>
+                    <path d="M8 18c-2 0-4-1-5-3 2-1 4 0 5 1"/>
+                    <path d="M16 18c2 0 4-1 5-3-2-1-4 0-5 1"/>
+                </svg>
+                <h1>Study Grove</h1>
+            </div>
+        </div>
+        <nav class="header-right">
+            <button id="btn-archive" class="nav-btn">Archive</button>
+            <button id="btn-stats" class="nav-btn">Stats</button>
+            <button id="btn-settings" class="nav-btn">Settings</button>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="app-main">
+        <!-- Plant Visualization -->
+        <section id="plant-section">
+            <div class="plant-container">
+                <div id="plant-display" class="plant-display">
+                    <svg id="plant-svg" viewBox="0 0 200 260" class="plant-svg">
+                        <!-- Pot -->
+                        <path d="M60 200 L70 250 L130 250 L140 200 Z" fill="#8B6F47" stroke="#6B5235" stroke-width="1.5"/>
+                        <rect x="55" y="192" width="90" height="12" rx="3" fill="#9B7F57" stroke="#6B5235" stroke-width="1.5"/>
+                        <ellipse cx="100" cy="200" rx="40" ry="5" fill="#6B5235" opacity="0.3"/>
+                        <!-- Soil -->
+                        <ellipse cx="100" cy="200" rx="38" ry="6" fill="#5C4033"/>
+                        <!-- Stem -->
+                        <g id="plant-stem">
+                            <path id="stem-main" d="M100 200 L100 200" stroke="#5B7A3A" stroke-width="3" stroke-linecap="round" fill="none"/>
+                        </g>
+                        <!-- Leaves -->
+                        <g id="plant-leaves"></g>
+                        <!-- Flower -->
+                        <g id="plant-flower"></g>
+                    </svg>
+                    
+                    <!-- Harvest Overlay -->
+                    <div id="harvest-overlay" class="harvest-overlay" hidden>
+                        <button id="btn-harvest" class="btn-harvest">Harvest!</button>
+                    </div>
+                </div>
+                <div class="plant-info">
+                    <span id="plant-stage-label" class="plant-stage-label">Stage I · Seed</span>
+                    <h2 id="plant-name" class="plant-name">Your Study Sprout</h2>
+                    <div id="plant-progress-bar" class="plant-progress-bar">
+                        <div id="plant-progress-fill" class="plant-progress-fill" style="width: 0%"></div>
+                    </div>
+                    <span id="plant-progress-text" class="plant-progress-text">0 sessions until next stage</span>
+                    <div id="plant-type-selector" class="plant-type-selector">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+                <!-- Session Indicators -->
+                <div id="session-indicators" class="session-indicators">
+                    <div class="session-dot" data-session="1"></div>
+                    <div class="session-dot" data-session="2"></div>
+                    <div class="session-dot" data-session="3"></div>
+                    <div class="session-dot" data-session="4"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timer Section -->
+        <section id="timer-section">
+            <div class="timer-container">
+                <!-- Circular Timer -->
+                <div class="timer-ring-wrapper">
+                    <svg class="timer-ring" viewBox="0 0 280 280">
+                        <!-- Tick marks -->
+                        <g id="tick-marks" class="tick-marks"></g>
+                        <!-- Background circle -->
+                        <circle class="timer-ring-bg" cx="140" cy="140" r="120" fill="none" stroke-width="3"/>
+                        <!-- Progress circle -->
+                        <circle id="timer-ring-progress" class="timer-ring-progress" cx="140" cy="140" r="120" fill="none" stroke-width="4"/>
+                        <!-- Overtime glow circle -->
+                        <circle id="timer-ring-overtime" class="timer-ring-overtime" cx="140" cy="140" r="120" fill="none" stroke-width="4" opacity="0"/>
+                    </svg>
+                    <div class="timer-center">
+                        <div id="timer-mode-badge" class="timer-mode-badge">
+                            <span class="mode-dot"></span>
+                            <span id="timer-mode-text">FOCUS</span>
+                        </div>
+                        <div id="timer-display" class="timer-display">30:00</div>
+                        <div id="timer-session-info" class="timer-session-info">Session I of IV</div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="timer-controls">
+                    <button id="btn-reset" class="control-btn control-btn-secondary" title="Reset">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12a9 9 0 1 1 9 9"/>
+                            <polyline points="3 3 3 12 12 12"/>
+                        </svg>
+                    </button>
+                    <button id="btn-start" class="control-btn control-btn-primary">
+                        <span id="btn-start-text">Start</span>
+                    </button>
+                    <button id="btn-skip" class="control-btn control-btn-secondary" title="Skip">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="5 4 15 12 5 20 5 4"/>
+                            <line x1="19" y1="5" x2="19" y2="19"/>
+                        </svg>
+                    </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Settings Bar -->
+    <footer id="settings-bar" class="settings-bar">
+        <div class="settings-items">
+            <div class="setting-item">
+                <label for="setting-focus">Focus</label>
+                <div class="setting-control">
+                    <button class="setting-adj" data-target="focus" data-dir="-1">−</button>
+                    <input type="number" id="setting-focus" class="setting-value-input" value="30" min="1" max="120">
+                    <span class="setting-unit">min</span>
+                    <button class="setting-adj" data-target="focus" data-dir="1">+</button>
+                </div>
+            </div>
+            <div class="setting-item">
+                <label for="setting-break">Break</label>
+                <div class="setting-control">
+                    <button class="setting-adj" data-target="break" data-dir="-1">−</button>
+                    <input type="number" id="setting-break" class="setting-value-input" value="5" min="1" max="60">
+                    <span class="setting-unit">min</span>
+                    <button class="setting-adj" data-target="break" data-dir="1">+</button>
+                </div>
+            </div>
+            <div class="setting-item">
+                <label for="setting-longbreak">Long Break</label>
+                <div class="setting-control">
+                    <button class="setting-adj" data-target="longbreak" data-dir="-1">−</button>
+                    <input type="number" id="setting-longbreak" class="setting-value-input" value="15" min="1" max="60">
+                    <span class="setting-unit">min</span>
+                    <button class="setting-adj" data-target="longbreak" data-dir="1">+</button>
+                </div>
+            </div>
+        </div>
+        <div class="settings-right">
+            <button id="btn-pip" class="settings-btn" title="Pop out mini timer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px; margin-top: -2px;">
+                    <rect x="2" y="3" width="20" height="14" rx="2"/>
+                    <rect x="12" y="11" width="10" height="10" rx="1" fill="currentColor" opacity="0.3" stroke="currentColor"/>
+                </svg>
+                Pop-out
+            </button>
+            <button id="btn-export" class="settings-btn">Export</button>
+            <button id="btn-import" class="settings-btn">Import</button>
+            <input type="file" id="import-file" accept=".json" hidden>
+        </div>
+    </footer>
+
+    <!-- Stats Modal -->
+    <div id="stats-modal" class="modal-overlay" hidden>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Your Progress</h2>
+                <button id="btn-close-stats" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Today -->
+                <div class="stats-card">
+                    <h3>Today</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-value" id="stat-today-focus">0h 0m</span>
+                            <span class="stat-label">Focus Time</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="stat-today-sessions">0</span>
+                            <span class="stat-label">Sessions</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="stat-today-overtime">0m</span>
+                            <span class="stat-label">Overtime</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="stat-today-breaks">0m</span>
+                            <span class="stat-label">Break Time</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Week -->
+                <div class="stats-card">
+                    <h3>This Week</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-value" id="stat-week-focus">0h 0m</span>
+                            <span class="stat-label">Focus Time</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="stat-week-sessions">0</span>
+                            <span class="stat-label">Sessions</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="stat-week-overtime">0m</span>
+                            <span class="stat-label">Overtime</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="stat-week-breaks">0m</span>
+                            <span class="stat-label">Break Time</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Weekly chart -->
+                <div class="stats-card">
+                    <h3>Weekly Overview</h3>
+                    <div id="weekly-chart" class="weekly-chart"></div>
+                </div>
+                <!-- Session History -->
+                <div class="stats-card">
+                    <h3>Recent Sessions</h3>
+                    <div id="session-history" class="session-history"></div>
+                </div>
+                <!-- Clear All -->
+                <div id="clear-all-wrapper" class="clear-all-wrapper">
+                    <button id="btn-clear-all" class="btn-danger">Clear All Progress</button>
+                    <div id="clear-confirm" class="clear-confirm" hidden>
+                        <span class="clear-confirm-text">Are you sure? This cannot be undone.</span>
+                        <div class="clear-confirm-actions">
+                            <button id="btn-clear-yes" class="btn-danger-solid">Yes, clear everything</button>
+                            <button id="btn-clear-no" class="btn-cancel">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay" hidden>
+        <div class="modal-content modal-content-sm">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button id="btn-close-settings" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-form">
+                    <div class="form-group">
+                        <label>Focus Duration (minutes)</label>
+                        <input type="number" id="input-focus" min="1" max="120" value="30">
+                    </div>
+                    <div class="form-group">
+                        <label>Break Duration (minutes)</label>
+                        <input type="number" id="input-break" min="1" max="60" value="5">
+                    </div>
+                    <div class="form-group">
+                        <label>Long Break Duration (minutes)</label>
+                        <input type="number" id="input-longbreak" min="1" max="60" value="15">
+                    </div>
+                    <div class="form-group">
+                        <label>Sessions before Long Break</label>
+                        <input type="number" id="input-sessions" min="2" max="10" value="4">
+                    </div>
+                    <div class="form-group">
+                        <label>Daily Session Goal</label>
+                        <input type="number" id="input-daily-goal" min="1" max="20" value="4">
+                    </div>
+                    <div class="form-group">
+                        <label>Pop-out Method</label>
+                        <select id="input-pip-method" class="setting-select">
+                            <option id="opt-pip-api" value="pip">Picture-in-Picture</option>
+                            <option value="popup">Browser Window</option>
+                        </select>
+                        <div id="pip-unsupported-note" style="font-size: 0.65rem; color: #a04040; margin-top: 4px;" hidden>
+                            PiP is grayed out because your browser does not support the required API.
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Pop-out Timer Style</label>
+                        <select id="input-pip-style" class="setting-select">
+                            <option value="minimal">Minimal</option>
+                            <option value="full">Full (with ring)</option>
+                            <option value="replica">Replica (Main Timer Layout)</option>
+                        </select>
+                    </div>
+                    <button id="btn-save-settings" class="control-btn control-btn-primary" style="width:100%;margin-top:1rem;">Save Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Archive Modal -->
+    <div id="archive-modal" class="modal-overlay" hidden>
+        <div class="modal-content modal-content-lg">
+            <div class="modal-header">
+                <h2>Plant Archive</h2>
+                <button id="btn-close-archive" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="archive-grid" class="archive-grid">
+                    <!-- Archived plants injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio for notification -->
+    <audio id="audio-bell" preload="auto">
+        <source src="data:audio/wav;base64,UklGRigBAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQBAABkAHgAjACfALAAwADOANoA4wDqAO8A8QDwAOwA5gDeANQAyAC6AKsAmgCIAHUAYQBMADcAIgAOAPr/5v/S/77/q/+Z/4j/eP9p/1v/T/9E/zv/Mv8r/yb/Iv8g/x//IP8i/yb/LP8z/zv/RP9P/1v/af94/4j/mf+r/77/0v/m//r/DgAiADcATABhAHUAiACaAKsAugDIANQA3gDmAOwA8ADxAO8A6gDjANoAzgDAALAAnwCMAHgAZABPADoAJQARAP3/6f/W/8P/sf+f/47/fv9v/2H/VP9I/z3/NP8s/yX/H/8b/xj/F/8X/xj/G/8f/yX/LP80/z3/SP9U/2H/b/9+/47/n/+x/8P/1v/p//3/EQAAAA==" type="audio/wav">
+    </audio>
+
+    <script src="app.js"></script>
+</body>
+</html>
